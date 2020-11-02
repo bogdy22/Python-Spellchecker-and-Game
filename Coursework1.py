@@ -12,6 +12,7 @@ while ok == 1:
 	if choice == "1":
 		sentence = input(" Please enter the sentence you want to spellcheck: ")
 		words = sentence.split(" ")
+		print(words)
 		ok = 0
 
 	elif choice == "2":
