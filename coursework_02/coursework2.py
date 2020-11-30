@@ -94,7 +94,10 @@ def shooting():
 			current_score += 10
 			canvas.itemconfig(score, text="Score:" + str(current_score))
 			# asteroids.remove(hit)
-			final_score = current_score	
+			final_score = current_score
+			print(final_score)
+			with open("load_game_score.txt", 'w') as file:
+				file.write(str(final_score))
 	canvas.update()
 	window.after(100, shooting)	
 	
@@ -117,13 +120,68 @@ def resume():
 
 def back_to_menu():
 	canvas.destroy()
-	print(final_score)
+	# print(final_score)
 
 def menu(event):
 	canvas.destroy()
 
 def load_game():	
-	game_loop()
+	canvas_game()
+	stars_background()
+	global score
+	global current_score
+	global final_score
+	with open("load_game_score.txt", 'r') as file:
+		tmp_score = file.read()
+	print(type(int(tmp_score)))
+	current_score = int(tmp_score)
+	score = canvas.create_text(100,100, text=("Score:" +str(current_score)), font=("Times New Roman Bold",30), fill="white")
+	
+	# spaceship = PhotoImage(file = "shuttle2.gif")
+	# spaceship_sprite = canvas.create_image(750, 700, anchor="s", image = spaceship)
+
+	# player_init_coords = canvas.coords(spaceship_sprite)
+	xy = (700, 750, 750, 800)
+	global object_test 
+	object_test = canvas.create_oval(xy, fill="red")
+	create_asteroids()
+
+	window.bind('<p>', pause)
+	
+	X = [4] * num_asteroids
+	Y = [4] * num_asteroids
+
+	global loop
+	loop=True
+	while loop==True:
+		global player_coords
+		global pos
+		player_coords = canvas.coords(object_test)
+		#print(player_coords)
+		for i in range(num_asteroids):
+			pos = canvas.coords(asteroids[i])
+
+			if pos[0] < 0 or pos[2] > 1820:
+				X[i] = -X[i]
+
+			canvas.move(asteroids[i], -X[i], 0)
+
+		sleep(0.00000000000001)
+		window.update()
+		# window.bind("<Up>", up)
+		# window.bind("<Down>", down)
+
+		window.bind("<space>", shot)
+		global player_coords_live
+		player_coords_live = canvas.coords(object_test)
+		
+		window.bind("<Left>", left)
+	
+		window.bind("<Right>", right)
+		# if current_score == 20:
+		# 	loop = False
+		# 	back_to_menu()
+		# print(player_coords_live)
 
 def game_loop():
 	canvas_game()
